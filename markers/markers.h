@@ -1,3 +1,6 @@
+#ifndef MARKERS_H_
+#define MARKERS_H_
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,7 +13,7 @@
 // };
 // struct Marker {
 //     int id;
-    
+
 
 // };
 using namespace std;
@@ -21,9 +24,10 @@ using namespace cv;
 //     float y;
 //     float z;
 // };
+void PRINT_DEBUG(string str){
+	cout << str << endl;
+}
 
-#ifndef _MARKERS_H_
-#define _MARKERS_H_
 
 // Point3f rotate_by_z(Point3f p1, Point3f p2){
 //     Point3f p3 = p1;
@@ -31,16 +35,31 @@ using namespace cv;
 //     p3.x = ((x1 - x0) * cos(a)) - ((y1 - y0) * sin(a)) + x0;
 //     p3.y = ((x1 - x0) * sin(a)) + ((y1 - y0) * cos(a)) + y0;
 // }
-cv::Point3f rotate3d(const cv::Point3f inPoint, const cv::Point3f inPoint2, const double a)
+cv::Point3f rotate3d(const cv::Point3f inPoint, const cv::Point3f center, cv::Point3f rotation)
 {
-    cv::Point3f outPoint = inPoint2;
-    //CW rotation
-    // outPoint.x = std::cos(angRad)*inPoint.x - std::sin(angRad)*inPoint.y;
-    // outPoint.y = std::sin(angRad)*inPoint.x + std::cos(angRad)*inPoint.y;
+	cv::Point3f point = inPoint - center;
 
-    outPoint.x = ((inPoint.x - inPoint2.x) * cos(a)) - ((inPoint.y - inPoint2.y) * sin(a)) + inPoint2.x;
-    outPoint.y = ((inPoint.x - inPoint2.x) * sin(a)) + ((inPoint.y - inPoint2.y) * cos(a)) + inPoint2.y;
-    return outPoint;
+	float temp = point.y;
+    point.y = point.y * cos(rotation.x) - point.z * sin(rotation.x);
+    point.z = temp * sin(rotation.x) + point.z * cos(rotation.x);
+
+	temp = point.z;
+    point.z = point.z * cos(rotation.y) - point.x * sin(rotation.y);
+    point.x = temp * sin(rotation.y) + point.x * cos(rotation.y);
+
+	temp = point.x;
+    point.x = point.x * cos(rotation.z) - point.y * sin(rotation.z);
+    point.y = temp * sin(rotation.z) + point.y * cos(rotation.z);
+
+	return center + point;
+    // cv::Point3f outPoint = inPoint2;
+    // //CW rotation
+    // // outPoint.x = std::cos(angRad)*inPoint.x - std::sin(angRad)*inPoint.y;
+    // // outPoint.y = std::sin(angRad)*inPoint.x + std::cos(angRad)*inPoint.y;
+	//
+    // outPoint.x = ((inPoint.x - inPoint2.x) * cos(a)) - ((inPoint.y - inPoint2.y) * sin(a)) + inPoint2.x;
+    // outPoint.y = ((inPoint.x - inPoint2.x) * sin(a)) + ((inPoint.y - inPoint2.y) * cos(a)) + inPoint2.y;
+    // return outPoint;
 }
 
 void alignObjPointsToCenter(Mat &obj_points, double &center_x, double &center_y, double &center_z)

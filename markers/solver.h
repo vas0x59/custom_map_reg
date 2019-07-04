@@ -1,3 +1,6 @@
+#ifndef SOLVER_H_
+#define SOLVER_H_
+
 #include <iostream>
 #include <vector>
 #include "opencv2/opencv.hpp"
@@ -8,8 +11,7 @@
 #include "markers.h"
 #include "string.h"
 
-#ifndef _SOLVER_H_
-#define _SOLVER_H_
+
 
 using namespace cv;
 
@@ -20,7 +22,7 @@ class Solver {
         void set_camera_conf(Mat cameraMatrix, Mat distCoeffs);
         bool solve(Mat objPoints, Mat imgPoints, Pose &pose, bool useExtrinsicGuess = false);
         bool solve(Mat objPoints, Mat imgPoints, Pose &pose, Mat &image, bool useExtrinsicGuess = false);
-        bool load_camera_conf(String path);
+        void load_camera_conf(String path);
     private:
         Mat _cameraMatrix;
         Mat _distCoeffs;

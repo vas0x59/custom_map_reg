@@ -1,3 +1,7 @@
+#ifndef ARUCOMARKERS_H_
+#define ARUCOMARKERS_H_
+
+
 #include <iostream>
 #include <vector>
 #include "opencv2/opencv.hpp"
@@ -14,14 +18,12 @@
 // };
 using namespace cv;
 
-#ifndef _ARUCOMARKERS_H_
-#define _ARUCOMARKERS_H_
 
 struct ArucoMarkerMap
 {
     int id;
     float size;
-    float z_rotation;
+    Point3f rotation;
     Point3f point;
 };
 // struct ArucoMarkerMapPoints{
@@ -32,13 +34,13 @@ class ArucoMarkersDetector
 {
 public:
     ArucoMarkersDetector(cv::Ptr<cv::aruco::Dictionary> dictionary);
-    void addMarker(int id, float size, Point3f point, float z_rotation = 0);
+    void addMarker(int id, float size, Point3f point, Point3f rotation);
     void genBoard();
     // void drawMarkers();
     Mat drawBoard(cv::Size size);
-    Mat drawMarker(int id);
-    void drawViz(Mat viz);
-    
+    Mat drawMarker(int ids);
+    // void drawViz(Mat viz);
+
     bool detect(cv::Mat image, cv::Mat &objPoints, cv::Mat &imgPoints);
     bool detect(cv::Mat image, cv::Mat &objPoints, cv::Mat &imgPoints, cv::Mat &outImage);
     void loadMap(std::string);
@@ -50,7 +52,7 @@ private:
     std::vector<std::vector<cv::Point2f>> _corners;
     void _getBoardObjectAndImagePoints(const Ptr<aruco::Board> &board, InputArrayOfArrays detectedCorners,
                                        InputArray detectedIds, OutputArray objPoints, OutputArray imgPoints);
-    
+
     // std::vector<ArucoMark
     // std::vector<>
 };

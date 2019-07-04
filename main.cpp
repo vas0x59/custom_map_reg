@@ -50,11 +50,13 @@ int main(){
     fs2["dictinary"] >> dictinary;
     int cam_id = 2;
     fs2["cam_id"] >> cam_id;
-    
+
     fs2.release();
 
+
     Solver solver;
-    solver.load_camera_conf("./log.yml");
+    // solver.
+    solver.load_camera_conf(calibration_file);
 
     ArucoMarkersDetector aruco_detector(cv::aruco::getPredefinedDictionary(dictinary));
     aruco_detector.loadMap(map);
@@ -72,7 +74,7 @@ int main(){
     // imshow("marker", map_img);
     // Mat viz;
     // map_img.copyTo(viz);
-    
+
 
     // Mat objPoints, imgPoints;
     // aruco_detector.detect(viz, objPoints, imgPoints, viz);
@@ -87,7 +89,7 @@ int main(){
     // else {
     //     std::cout << "Markers not found" << endl;
     // }
-    
+
     // cin >> cam_id;
     cv::VideoCapture cap(cam_id);
     while (waitKey(4) != 'q'){
@@ -96,15 +98,15 @@ int main(){
         // cout << "frame w: " << frame.rows << " frame h: " << frame.cols << "\n";
         Mat viz;
         frame.copyTo(viz);
-        
+
 
         Mat objPoints, imgPoints;
         aruco_detector.detect(frame, objPoints, imgPoints, viz);
         // aruco_detector.drawViz(viz);
-        
+
         // cout << objPoints << "img: " << imgPoints << "\n";
         Pose pose;
-        if (solver.solve(objPoints, imgPoints, pose, viz)){
+        if (solver.solve(objPoints, imgPoints, pose)){
             // std::cout << "Markers not found" << endl;
             std::cout << string_pose(pose) << endl;
         }
@@ -116,7 +118,7 @@ int main(){
     }
     cap.release();
     //waitKey(0);
-      
+
     // aruco_detector.genBoard();
 
     // aruco_detector.drawMarkers();
